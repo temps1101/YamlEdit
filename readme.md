@@ -44,10 +44,10 @@ I'll use this YAML file as a example ↓
 
 ```yaml
 gamemode: survival
-greeting-message: ["hi! {}", "{} has come to kill us", "assult {}!"]
+item-list: [12, 453, 212]
 zombie:
-	health-limit: 20
-	silent-mode: true
+    health-limit: 20
+    silent-mode: true
 ```
 
 ### BASIC: Edit the value of the dictionary
@@ -66,19 +66,19 @@ After selecting the file.
 
 ```yaml
 gamemode: hardcore
-greeting-message: ["hi! {}", "{} has come to kill us", "assult {}!"]
+item-list: [12, 453, 212]
 zombie:
-	health-limit: 20
-	silent-mode: true
+    health-limit: 20
+    silent-mode: true
 ```
 </details>
 
- ### BASIC: Append value to the selected key
+### BASIC: Append value to the selected key
 
-When you want to append a value `"be nice to {}"` to the key `greeting-message`, type:
+When you want to append a value `4` to the key `item-list`, type:
 
 ```
-/edit a greeting-message "be nice to {}"
+/edit a item-list 4
 ```
 
 After selecting the file.
@@ -89,10 +89,10 @@ After selecting the file.
 
 ```yaml
 gamemode: survival
-greeting-message: ["hi! {}", "{} has come to kill us", "assult {}!", "be nice to {}"]
+item-list: [12, 453, 212]
 zombie:
-	health-limit: 20
-	silent-mode: true
+    health-limit: 20
+    silent-mode: true
 ```
 </details>
 
@@ -110,10 +110,10 @@ When you want to append new dictionary `friendly: true` to the key `zombie`, typ
 
 ```yaml
 gamemode: survival
-greeting-message: ["hi! {}", "{} has come to kill us", "assult {}!"]
+item-list: [12, 453, 212]
 zombie:
-	health-limit: 20
-	silent-mode: true
+    health-limit: 20
+    silent-mode: true
     friendly: true
 ```
 </details>
@@ -125,7 +125,7 @@ For example, when you had a yaml file like this:
 and you want to change the `zombie`'s `health-limit`to`30`, after selecting the file, type the command like this to do it.
 
 ```
-/edit zombie.health-limit 30
+/edit m zombie.health-limit 30
 ```
 
 So, when passing nested keys as arguments, separate the paths with dots (`.`) like this.
@@ -136,10 +136,33 @@ So, when passing nested keys as arguments, separate the paths with dots (`.`) li
 
 ```yaml
 gamemode: survival
-greeting-message: ["hi! {}", "{} has come to kill us", "assult {}!"]
+item-list: [12, 453, 212]
 zombie:
-	health-limit: 30
-	silent-mode: true
+    health-limit: 30
+    silent-mode: true
+```
+</details>
+
+### How to express a string value
+
+To express a string (e.g. `"I am a god"`, `"parsing is difficlt"`) value, just put `"` or `'` around the value.
+
+If you wanted to append `"apple"` to `item-list`, you can type in like this:
+
+```
+/edit a item-list "apple"
+```
+
+<details>
+
+<summary>This is the yaml output after running the command</summary>
+
+```yaml
+gamemode: survival
+item-list: [12, 453, 212, "apple"]
+zombie:
+    health-limit: 30
+    silent-mode: true
 ```
 </details>
 
