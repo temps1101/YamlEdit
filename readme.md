@@ -145,7 +145,7 @@ zombie:
 
 ### How to express a string value
 
-To express a string (e.g. `"I am a god"`, `"parsing is difficlt"`) value, just put `"` or `'` around the value.
+To express a string (e.g. `"I am a god"`, `"parsing is difficlt"`) value, just put `"` around the value.
 
 If you wanted to append `"apple"` to `item-list`, you can type in like this:
 

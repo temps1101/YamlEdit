@@ -1,0 +1,12 @@
+name: YamlEdit
+version: '${project.version}'
+main: com.temps1101.yamledit.yamledit.YamlEdit
+authors: [ temps1101 ]
+description: Edit YAML from minecraft client!
+commands:
+  yamledit:
+    aliases: ['ye', 'edit']
+    permission: yamledit.command
+permissions:
+  yamledit.command:
+    default: op
