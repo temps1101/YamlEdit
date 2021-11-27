@@ -17,6 +17,7 @@ public class YamlEditCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         args = parseArguments(args);
+        sender.sendMessage(args);
 
         if (args.length == 0) {
             sender.sendMessage(Chat.f("&c====&l&9Yaml&3Edit&r&c====", false));
@@ -49,7 +50,7 @@ public class YamlEditCommand implements CommandExecutor {
                     }
 
                     YamlEdit.getSelectedYamlCache().put((Entity) sender, configfile);
-                    sender.sendMessage(Chat.f("Selected {0} !", true, args[1]));
+                    sender.sendMessage(Chat.f("&3Selected {0} !", true, args[1]));
 
                     return true;
                 } else {
@@ -76,14 +77,15 @@ public class YamlEditCommand implements CommandExecutor {
                     String value = args[2];
 
                     if (yamlConfiguration.contains(key)) {
-                        yamlConfiguration.set(key, value);
+
+                        yamlConfiguration.set(key, convert2adequateType(value));
 
                         try {
                             yamlConfiguration.save(yamlFilePath);
-                            sender.sendMessage(Chat.f("&cModified {0}'s value to {1} file {2}", true, yamlFilePath, value, key));
+                            sender.sendMessage(Chat.f("&3Modified {0}\u0027s value to {1} in key {2}", true, yamlFilePath.getName(), value.toString(), key.toString()));
                             return true;
                         } catch (IOException exception) {
-                            sender.sendMessage(Chat.f("&cError occurred when saving change. See the server's log for more information", true, key));
+                            sender.sendMessage(Chat.f("&cError occurred when saving change. See the server\u0027s log for more information", true, key));
                             exception.printStackTrace();
                             return true;
                         }
@@ -126,42 +128,64 @@ public class YamlEditCommand implements CommandExecutor {
         return true;
     }
 
-    private final Collection<Character> QUOTATION_MARKS = Arrays.asList('\'', '\"');
-    private final char SPACE = ' ';
+    private static final Collection<Character> QUOTATION_MARKS = Arrays.asList('\'', '\"');
+    private static final char SPACE = ' ';
 
-    private String[] parseArguments(String[] arguments) {
+    private static String[] parseArguments(String[] arguments) {
         char[] chars = String.join(" ", arguments).toCharArray();
         ArrayList<String> parsed_arguments = new ArrayList<>();
-        StringBuilder stringBuilder = new StringBuilder();
-
-        boolean in_quote = false;
+        StringBuilder builder = new StringBuilder();
+        boolean isInsideQuote = false;
+        char currentQuotation = 0;
         int counter = 0;
 
-        for (char c : chars) {
+        for (char charTemp : chars) {
+            System.out.println(builder.toString());
             counter++;
 
-            if (!in_quote && c == SPACE) {
-                addAndClear(stringBuilder, parsed_arguments);
+            if (charTemp == SPACE && !isInsideQuote) {
+                builderReset(parsed_arguments, builder);
                 continue;
             }
 
-            if (QUOTATION_MARKS.contains(c)) {
-                in_quote = !in_quote;
+            if (QUOTATION_MARKS.contains(charTemp)) {
+                builder.append(charTemp);
+                if (!isInsideQuote) {
+                    isInsideQuote = true;
+                    currentQuotation = charTemp;
+                } else if (charTemp == currentQuotation) {
+                    isInsideQuote = false;
+                }
                 continue;
             }
-
-            stringBuilder.append(c);
 
             if (counter >= chars.length) {
-                addAndClear(stringBuilder, parsed_arguments);
+                builderReset(parsed_arguments, builder);
+                continue;
             }
+
+            builder.append(charTemp);
         }
 
         return parsed_arguments.toArray(new String[0]);
     }
 
-    private void addAndClear(StringBuilder stringBuilder, ArrayList<String> arguments) {
-        arguments.add(stringBuilder.toString().trim());
-        stringBuilder.setLength(0);
+    private static void builderReset(ArrayList<String> parsed_arguments, StringBuilder builder) {
+        parsed_arguments.add(builder.toString().trim());
+        builder.setLength(0);
+    }
+
+    private Object convert2adequateType(String value) {
+        if (value.equalsIgnoreCase("true")) {
+            return true;
+        } else if (value.equalsIgnoreCase("false")) {
+            return false;
+        } else if (value.matches("\\d+")) {
+            return Integer.parseInt(value);
+        } else if (value.matches("\\d+\\.\\d+")) {
+            return Float.parseFloat(value);
+        } else {
+            return value;
+        }
     }
 }

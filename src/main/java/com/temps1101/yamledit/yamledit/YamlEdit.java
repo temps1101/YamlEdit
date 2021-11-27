@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public final class YamlEdit extends JavaPlugin {
     private static YamlEdit plugin;
-    private static HashMap<Entity, File> selectedYamlCache;
+    private static HashMap<Entity, File> selectedYamlCache = new HashMap<>();
 
     @Override
     public void onEnable() {
